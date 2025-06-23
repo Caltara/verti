@@ -1,6 +1,6 @@
 import streamlit as st
 import openai
-from datetime import datetime, date, time
+from datetime import datetime, date
 
 # Set your OpenAI API key from Streamlit secrets
 openai.api_key = st.secrets["OPENAI_API_KEY"]
