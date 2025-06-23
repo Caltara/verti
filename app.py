@@ -1,15 +1,14 @@
-# app.py
 import streamlit as st
-from openai import OpenAI
+import openai
 from datetime import datetime, date, time
 
-# Initialize OpenAI client - set OPENAI_API_KEY in Streamlit secrets
-client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
+# Set your OpenAI API key from Streamlit secrets
+openai.api_key = st.secrets["OPENAI_API_KEY"]
 
 st.set_page_config(page_title="Verti - Your Personal AI Assistant", layout="wide")
 st.title("Verti - Your Personal AI Assistant 🤖")
 
-# Initialize session state to store data across features
+# Initialize session state for storing data temporarily
 if "expenses" not in st.session_state:
     st.session_state.expenses = []
 
@@ -26,7 +25,7 @@ if "trips" not in st.session_state:
     st.session_state.trips = []
 
 def ask_gpt(prompt):
-    response = client.chat.completions.create(
+    response = openai.ChatCompletion.create(
         model="gpt-4o-mini",
         messages=[{"role": "user", "content": prompt}]
     )
@@ -62,7 +61,6 @@ if feature == "Plan Business Trip":
         result = ask_gpt(prompt)
         st.success("Here is your business trip plan:")
         st.write(result)
-        # Save trip summary for dashboard
         st.session_state.trips.append({
             "destination": destination,
             "start_date": str(start_date),
@@ -98,7 +96,6 @@ elif feature == "Coordinate Meetings":
         meeting_plan = ask_gpt(prompt)
         st.success("Meeting Plan:")
         st.write(meeting_plan)
-        # Save meeting info for dashboard and follow-ups
         st.session_state.meetings.append({
             "date": str(meeting_date),
             "time": str(meeting_time),
@@ -148,7 +145,6 @@ elif feature == "Project Management":
         advice = ask_gpt(prompt)
         st.success("Project Advice:")
         st.write(advice)
-        # Save tasks for dashboard
         st.session_state.tasks.append({
             "project": project_name,
             "goals": project_goals,
@@ -241,7 +237,6 @@ elif feature == "Task Prioritization Assistant":
         prioritized_tasks = ask_gpt(prompt)
         st.success("Prioritized Tasks:")
         st.write(prioritized_tasks)
-        # Save tasks for dashboard
         st.session_state.tasks.append({
             "tasks": tasks_text,
             "prioritization": prioritized_tasks
